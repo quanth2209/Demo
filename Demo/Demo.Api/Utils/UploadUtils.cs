@@ -1,11 +1,12 @@
 ﻿using Demo.Core;
+using Demo.Core.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using Demo.Core.Exceptions;
 
 namespace Demo.Api.Utils
 {
@@ -74,6 +75,46 @@ namespace Demo.Api.Utils
             {
                 throw new DemoException(e.Message);
             }
+        }
+
+        public (string, string) Save(string base64)
+        {
+            try
+            {
+                lock (Lock)
+                {
+                    var name = GenerateName();
+
+                    var fileName = $"{name}.{DefaultExtension}";
+
+                    var uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, UploadFolder);
+
+                    if (!Directory.Exists(uploadFolder))
+                        Directory.CreateDirectory(uploadFolder);
+
+                    var fileAbsolutePath = Path.Combine(uploadFolder, fileName);
+
+                    var imageBytes = Convert.FromBase64String(base64);
+                    File.WriteAllBytes(fileAbsolutePath, imageBytes);
+
+                    var thumbName = $"{name}_thumb.{DefaultExtension}";
+                    var thumbAbsolutePath = Path.Combine(uploadFolder, thumbName);
+
+                    var image = base64.Base64ToImage();
+                    image = image.Resize(100, 100);
+                    image.Save(thumbAbsolutePath, ImageFormat.Png);
+
+                    var relativePath = $"{UploadFolder}/{fileName}";
+                    var thumbRelativePath = $"{UploadFolder}/{thumbName}";
+
+                    return (relativePath, thumbRelativePath);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new DemoException(e.Message);
+            }
+
         }
 
         public static void IsValid(IFormFile file)
