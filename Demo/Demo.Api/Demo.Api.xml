@@ -4,5 +4,10 @@
         <name>Demo.Api</name>
     </assembly>
     <members>
+        <member name="M:Demo.Api.Areas.Admin.Controllers.UserController.Get">
+            <summary>
+            lay thong tin
+            </summary>
+        </member>
     </members>
 </doc>

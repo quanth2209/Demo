@@ -15,6 +15,8 @@ namespace Demo.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            Database(services);
+
             Swagger(services);
 
             Mvc(services);

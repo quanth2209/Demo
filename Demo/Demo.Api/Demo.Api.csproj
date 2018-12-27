@@ -29,7 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Demo.Configuration\Demo.Configuration.csproj" />
     <ProjectReference Include="..\Demo.Core\Demo.Core.csproj" />
+    <ProjectReference Include="..\Demo.EntityFramework\Demo.EntityFramework.csproj" />
     <ProjectReference Include="..\Demo.Models\Demo.Models.csproj" />
   </ItemGroup>
 
